@@ -1,0 +1,17 @@
+
+name: tester
+type: plugin
+version: 1.0.0+dev
+description: Unit Testing Framework
+
+plugins: [Doc, Hub]
+
+deps:
+  jphp-runtime: '*'
+  
+sources:
+- src
+  
+plugin:
+  sources:
+  - src-plugin
