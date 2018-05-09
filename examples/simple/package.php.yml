@@ -6,7 +6,7 @@ deps:
   jphp-zend-ext: '*'
 
 devDeps:
-  tester: '../../'
+  tester: '*'
 
 plugins:
 - App
