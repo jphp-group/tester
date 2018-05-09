@@ -7,7 +7,7 @@ description: Unit Testing Framework
 plugins: [Doc, Hub]
 
 deps:
-  jphp-runtime: '*'
+  jphp-core: '*'
   jphp-json-ext: '*'
 
 sources:
