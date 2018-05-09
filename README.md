@@ -13,7 +13,7 @@ jppm add tester -dev
 ```
 
 2. Create `tests` directory in root of your package dir.
-3. Create your first test class, e.g:
+3. Create your first test class, e.g `tests/SimpleTest.php`:
 
 ```php
 use tester\{TestCase, Assert};
