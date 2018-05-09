@@ -13,5 +13,6 @@ sources:
 - src
   
 plugin:
+  list: [tester\TesterPlugin]
   sources:
   - src-plugin
