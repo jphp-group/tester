@@ -10,6 +10,7 @@ use php\lib\fs;
 use phpx\parser\ClassRecord;
 use phpx\parser\SourceFile;
 use phpx\parser\SourceManager;
+use Tasks;
 
 /**
  *
@@ -29,7 +30,8 @@ class TesterPlugin
      */
     public function run(Event $event)
     {
-        \Tasks::run('install');
+        Tasks::run('install');
+        Tasks::run('build');
 
         $vendor = new Vendor($event->package()->getConfigVendorPath());
 
@@ -73,6 +75,7 @@ class TesterPlugin
             }
         }
 
+        fs::makeDir("./tests/");
         fs::format("./tests/tester.json", [
             'testCases' => flow($testCases)
                 ->find(function ($class) { return !$class->abstract; })

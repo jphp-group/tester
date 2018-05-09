@@ -83,8 +83,11 @@ class TestEnvironment
 
                         try {
                             $method->invoke($testCase);
+                            $this->log("-> {0}.{1}() is OK.", reflect::typeOf($testCase), $method->getName());
+
                         } catch (AssertionError $e) {
                             $result[reflect::typeOf($testCase)][$method->getName()] = $e;
+                            $this->log("-> {0}.{1}() is FAIL.", reflect::typeOf($testCase), $method->getName());
                         } finally {
                             $tearDown();
                         }
@@ -113,9 +116,6 @@ class TestEnvironment
 
             foreach ($result as $test => $errors) {
                 $this->log(" -> {0}", $test);
-
-                $i = 0;
-                $size = sizeof($errors);
 
                 $lineSize = 30;
 
