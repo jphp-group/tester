@@ -8,7 +8,8 @@ plugins: [Doc, Hub]
 
 deps:
   jphp-runtime: '*'
-  
+  jphp-json-ext: '*'
+
 sources:
 - src
   
@@ -16,3 +17,6 @@ plugin:
   list: [tester\TesterPlugin]
   sources:
   - src-plugin
+
+config:
+  ignore: ['/.git/**', '/.idea/**', '/examples/**', '/tests/**']

@@ -23,3 +23,8 @@ hs_err_pid*
 
 
 .idea/
+vendor/
+**/tester.json
+package-lock.php.yml
+package.*.yml
+!package.php.yml

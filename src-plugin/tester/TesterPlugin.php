@@ -4,6 +4,7 @@ namespace tester;
 use packager\Event;
 use packager\JavaExec;
 use packager\Vendor;
+use php\format\JsonProcessor;
 use php\lib\arr;
 use php\lib\fs;
 use phpx\parser\ClassRecord;
@@ -21,23 +22,26 @@ class TesterPlugin
     /**
      * @jppm-need-package
      *
-     * @jppm-denendency-of test
+     * @jppm-dependency-of test
      *
      * @jppm-description Run all tests.
      * @param $event
      */
     public function run(Event $event)
     {
+        \Tasks::run('install');
+
         $vendor = new Vendor($event->package()->getConfigVendorPath());
 
         $exec = new JavaExec();
         $exec->setSystemProperties([
-            'bootstrap.file' => 'tester/.bootstrap.php'
+            'bootstrap.file' => 'res://tester/.bootstrap.php'
         ]);
 
         $exec->addPackageClassPath($event->package());
         $exec->addVendorClassPath($vendor);
-        $exec->addClassPath("./tests");
+        $exec->addVendorClassPath($vendor, 'dev');
+        $exec->addClassPath("./tests/");
 
         $files = fs::scan("./tests/", ['extensions' => ['php']]);
 
@@ -51,7 +55,7 @@ class TesterPlugin
 
             foreach ($source->moduleRecord->getClasses() as $class) {
                 if ($this->isTestCase($class, $testCases)) {
-                    $testCases[$class->name] = $class->name;
+                    $testCases[$class->name] = $class;
                 }
             }
         }
@@ -64,19 +68,27 @@ class TesterPlugin
                 if ($testCases[$class->name]) continue;
 
                 if ($this->isTestCase($class, $testCases)) {
-                    $testCases[$class->name] = $class->name;
+                    $testCases[$class->name] = $class;
                 }
             }
         }
 
-        fs::format($vendor->getDir() . "/tester.json", [
-            'testCases' => arr::values($testCases)
-        ]);
+        fs::format("./tests/tester.json", [
+            'testCases' => flow($testCases)
+                ->find(function ($class) { return !$class->abstract; })
+                ->map(function ($class) { return $class->name; })
+                ->toArray()
+        ], JsonProcessor::SERIALIZE_PRETTY_PRINT);
+
+        $process = $exec->run();
+        $process = $process->inheritIO()->startAndWait();
+
+        exit($process->getExitValue());
     }
 
     protected function isTestCase(ClassRecord $record, array $otherTestCases = [])
     {
-        if ($record->parent && !$record->abstract && $record->type === 'CLASS') {
+        if ($record->parent && $record->type === 'CLASS') {
             if ($record->parent->name === 'tester\TestCase' || $otherTestCases[$record->parent->name]) {
                 return true;
             }

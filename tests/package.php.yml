@@ -1,0 +1,13 @@
+name: tester-tests
+version: 1.0.0
+
+deps:
+  jphp-core: '*'
+
+tasks:
+  check:
+    depends-on: [update, 'tester:run']
+
+devDeps:
+  tester: ../
+

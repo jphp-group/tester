@@ -1,0 +1,10 @@
+language: java
+
+jdk:
+  - oraclejdk9
+  - oraclejdk8
+
+before_install:
+  - wget -O - https://github.com/jphp-compiler/jphp/releases/download/jppm-0.2.7/jppm-setup-0.2.7.sh | bash
+
+script: cd ./tests/ && jppm check
