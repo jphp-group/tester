@@ -162,7 +162,7 @@ class TestEnvironment
 
     public function print($message, ...$args)
     {
-        foreach ($args as $i => $arg) $message = str::replace($message, "\{$i\}", $arg);
+        foreach ($args as $i => $arg) $message = str::replace($message, "{{$i}}", $arg);
 
         foreach ($this->printers as $printer) {
             $printer->write($message);
